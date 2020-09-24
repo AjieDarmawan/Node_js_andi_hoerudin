@@ -1,0 +1,50 @@
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Bank</th>
+              <th>No Rekening</th>
+              <th>Name</th>
+              <th>Gambar</th>
+              <th>Action</th>
+             
+            </tr>
+          </thead>
+        
+         <tbody>
+          <% for(let i = 0; i < results.length; i++){ %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= results[i].nama_bank %></td>
+              <td><%= results[i].no_rekening %></td>
+              <td><%= results[i].name %></td>
+              <td>
+                <img src="http://localhost:3001/images/<%= results[i].gambar %>" alt="imageUrl" width="70px">
+              </td>
+              <td>
+                 <form action="/admin/hapus_bank/<%= results[i].id %>" method="POST">
+                  
+                    <a href="javascript:void(0);"  data-toggle="modal" data-target="#edit" class="btn btn-sm btn-info edit"
+                    data-id="<%= results[i].id %>" data-name="<%= results[i].name %>" 
+                    data-no_rekening="<%= results[i].no_rekening %>" 
+                    data-nama_bank="<%= results[i].nama_bank %>"><i class="fas fa-edit"></i></a>
+
+                    <input type="hidden" class="form-control" name="id" value="<%= results[i].id %>" >
+                  <button type="submit" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                </form> 
+
+            
+              </td>
+            </tr>
+            <% } %>
+         </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
