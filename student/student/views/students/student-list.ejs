@@ -15,36 +15,49 @@
                         Added Students
                     </a>
                 </div>
-                  <table class="table">
-                    <tr>
-                      <td class="middle">
-                        <div class="media">
-                          <div class="media-left">
-                            <a href="#">
-                              <img class="media-object" src="https://4.bp.blogspot.com/-_k5EbzYYHA0/WFgNnIW6cwI/AAAAAAAAAFM/wPuFPnRyQWsk3eArp0MksAdWh3Ev1oYNACLcB/s1600/universitas%2Bpakuan.png" height="100px" width="100px" alt="...">
-                            </a>
-                          </div>
-                          <div class="media-body">
-                            <address>
-                                <b>Name Student</b>          : Name Student<br>
-                                <b>Gender</b>                : Gender<br>
-                                <b> Address </b>             : My Addres<br>
-                                <b> Class </b>               : Class<br>
-                                <b> Nik </b>                 : Student Nik
-                            </address>
-                          </div>
-                        </div>
-                      </td>
-                      <td width="100" class="middle">
-                        <div>
-                          <a href="#" class="btn btn-circle btn-default btn-xs" title="Edit">
-                            <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a href="#" class="btn btn-circle btn-danger btn-xs" title="Hapus">
-                          <i class="fas fa-trash"></i>
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
+                <table class="table" id="table">
+                  <% if(student.length > 0) {%>
+        <% for(let students of student) {%>
+        <tr>
+          <td class="middle">
+            <div class="media">
+              <div class="media-left">
+                <a href="#">
+                  <img class="media-object" src="<%= students.Image %>" height="100px" width="100px" alt="...">
+                </a>
+              </div>
+              <div class="media-body">
+                <address>
+                  <b>Name Student</b> : <%= students.name %><br>
+                  <b>Gender</b> : <%= students.gender %><br>
+                  <b> Address </b> : <%= students.Address %><br>
+                  <b> Class </b> : <%= students.classs %><br>
+                  <b> Nik </b> : <%= students.nik %>
+                </address>
+              </div>
+            </div>
+          </td>
+          <td width="100" class="middle">
+            <div>
+              <a href="/student-list/<%= students.id %>?edit=true" 
+                class="btn btn-circle btn-default btn-xs"
+                title="Edit">
+                <i class="fas fa-pencil-alt"></i>
+              </a>
+              
+              <form action="/student-delete" method="post">
+              <input type="hidden" name="studentid" value="<%= students.id %>">
+              <button type="submit"  class="btn btn-circle btn-danger btn-xs">
+                <i class="fas fa-trash"></i>
+              </button>
+              </a>
+            </form>
+            </div>
+          </td>
+         
+        </tr>
+        <%}%>
+                  <%}%>
+        </table>
                </div>
+               <%- include('../includes/footer.ejs') %>

@@ -1,0 +1,86 @@
+<%- include('../includes/head.ejs') %>
+</head>
+<body>
+<%- include('../includes/navbar.ejs') %>
+<div class="container">
+<div class="row">
+<%- include('../includes/menu.ejs') %>
+<!-- content -->
+
+
+<script>
+    console.log(student);
+
+</script>
+
+<div class="col-md-9">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+          Add Student Assessment
+        </div>
+<div class="panel-body">
+
+  <div class="form-horizontal">
+    <form action="/<% if(edit){%>assessment-edit<%}else{%>assessment-add<%}%>" method="post">
+    <div class="row">
+        <div class="col-md-8">
+            <% if(message){%>
+                <div class="alert alert-info" role="alert">
+                    <%= message  %>
+                </div>
+                <%}%>
+            <div class="form-group">
+                <label for="email" class="control-label col-md-3">Nik</label>
+                <div class="col-md-8">
+                    <select name="student_id" class="form-control">
+                        <option selected
+                        value="">
+                        <%= edit === true ? assessment.nik : ' --- Choose ---  ' %>
+                        <%= edit === true ? assessment.name : '' %></option>
+                    <% for(let students of student){%>
+                    <option value="<%= students.id %>"><%= students.nik %> -
+                        <%= students.name %></option>
+                    <%}%>
+                  </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="control-label col-md-3">Score</label>
+                <div class="col-md-8">
+                    <input type="number" name="score" value="<%= edit === true ? assessment.score : '' %>" id="score"
+                        class="form-control">
+                        <% if(edit){%>
+                            <input type="hidden" value="<%= assessment.id %>" name="id">
+                            <%}%>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <a href="/assessment" class="btn btn-default">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</form>
+</div>
+
+
+
+
+</div>
+
+
+
+</div>
+</div>
+
+<!-- content -->
+<%- include('../includes/footer.ejs') %>
