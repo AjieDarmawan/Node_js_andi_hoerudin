@@ -5,15 +5,24 @@ var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 var logger = require('morgan');
 
+const session = require('express-session');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 const HomeRouter = require('./routes/home/homeRouter');
 const studentRouter = require('./routes/student/studentRouter');
+const loginRouter = require('./routes/login/registerRouter');
+
+
 const assesmentController = require('./routes/assesment/assesmentRouter');
+
+
+
 
 const assesmentModel = require('./models/assessment/assessmentModel');
 const studentModel = require('./models/student/studentModel');
+const UserModel = require('./models/user/userModel');
 
 
 const db = require('./utils/db');
@@ -33,10 +42,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+app.use(
+  session({
+    secret:'my secret',
+    resave:false,
+    saveUninitialized:false,
+  })
+);
+
 // app.use('/', indexRouter);
 // app.use('/users', usersRouter);
 app.use(HomeRouter);
 app.use(studentRouter);
+app.use(loginRouter);
 app.use(assesmentController);
 
 assesmentModel.belongsTo(studentModel,{constraints:true,onDelete:'CASCADE'});
