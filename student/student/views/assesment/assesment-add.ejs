@@ -35,8 +35,8 @@
                     <select name="student_id" class="form-control">
                         <option selected
                         value="">
-                        <%= edit === true ? assessment.nik : ' --- Choose ---  ' %>
-                        <%= edit === true ? assessment.name : '' %></option>
+                        <%= edit === true ? assessment.student.nik : ' --- Choose ---  ' %>
+                        <%= edit === true ? assessment.student.name : '' %></option>
                     <% for(let students of student){%>
                     <option value="<%= students.id %>"><%= students.nik %> -
                         <%= students.name %></option>

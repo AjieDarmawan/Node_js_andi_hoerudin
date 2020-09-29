@@ -11,7 +11,14 @@ var usersRouter = require('./routes/users');
 const HomeRouter = require('./routes/home/homeRouter');
 const studentRouter = require('./routes/student/studentRouter');
 const assesmentController = require('./routes/assesment/assesmentRouter');
+
+const assesmentModel = require('./models/assessment/assessmentModel');
+const studentModel = require('./models/student/studentModel');
+
+
 const db = require('./utils/db');
+
+const sequelize = require('./utils/db');
 
 
 var app = express();
@@ -31,6 +38,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(HomeRouter);
 app.use(studentRouter);
 app.use(assesmentController);
+
+assesmentModel.belongsTo(studentModel,{constraints:true,onDelete:'CASCADE'});
+studentModel.hasMany(assesmentModel);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -53,10 +64,23 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-db.execute('select * from student').then((result)=>{
-  //console.log(result[0]);
+// db.execute('select * from student').then((result)=>{
+//   //console.log(result[0]);
+// }).catch((err)=>{
+//   console.log(err);
+// });
+
+
+
+
+sequelize.sync({force:false})
+.then((result)=>{
+  //console.log(result);
+
+
 }).catch((err)=>{
   console.log(err);
 });
+
 
 module.exports = app;

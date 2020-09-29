@@ -5,10 +5,15 @@ const studentModel = require('../../models/student/studentModel');
 
 exports.getIndex=(req,res,next)=>{
 
-    assesmentModel.fetcAll()
-    .then(([rows,fieldData])=>{
+    assesmentModel.findAll({
+        include:[{
+            model:studentModel,
+            attributes: ['name', 'classs', 'nik','gender','Address','Image'],
+        }]
+    })
+    .then((rows)=>{
 
-         console.log(rows);
+        // console.log(rows);
         res.render('assesment/assesment-list',{
             pageTitle:'assessment',
             path:'/assessment',
@@ -16,7 +21,7 @@ exports.getIndex=(req,res,next)=>{
     
         })
 
-        console.log(rows);
+       // console.log(rows);
 
     }).catch((err)=>{
         console.log(err);
@@ -29,7 +34,7 @@ exports.getIndex=(req,res,next)=>{
 exports.getAsessmentAdd=(req,res,next)=>{
 
 
-    studentModel.fetchAll()
+    studentModel.findAll()
     .then((rows,fieldData)=>{
 
         res.render('assesment/assesment-add',{
@@ -58,18 +63,28 @@ exports.PostAsessmentAdd=(req,res,next)=>{
     const student_id = req.body.student_id;
     const score = req.body.score;
 
-    const assesment = new assesmentModel(null,student_id,score);
-
-    assesment.save().then((result)=>{
-
-
+    assesmentModel.create({
+        score : score,
+        studentId:student_id, 
+    }).then((result)=>{
+        console.log("sukksess assement");
         res.redirect('/assessment');
-
-
     }).catch((err)=>{
         console.log(err);
-        //res.redirect('/assessment');
-    });
+    })
+
+    // const assesment = new assesmentModel(null,student_id,score);
+
+    // assesment.save().then((result)=>{
+
+
+    //     res.redirect('/assessment');
+
+
+    // }).catch((err)=>{
+    //     console.log(err);
+    //     //res.redirect('/assessment');
+    // });
   
 
     // console.log(score);
@@ -78,43 +93,35 @@ exports.PostAsessmentAdd=(req,res,next)=>{
 
 
 exports.getEditAssesment = (req, res, next) => {
-    const Edit = req.query.edit;
-    console.log(Edit);
-    console.log("edit");
-    if(!Edit){
-        res.redirect('/');
+
+    const edit = req.query.edit;
+    if (!edit) {
+        return res.redirect('/assessment');
     }
 
     const assessmentId = req.params.assessment;
-
-    console.log(assessmentId);
-
-    assesmentModel.findById(assessmentId)
-    .then(([rows])=>{
-       
-         return rows[0];
-         // console.log(student[0]);
-         // console.log(student);
-
-    }).then(rows=>{
-
-        console.log(rows);
-
-
-        studentModel.fetchAll().then(([result])=>{
-            res.render('assesment/assesment-add', {
-                pageTitle: 'assesment List',
-                path: '/assesment-list',
-                assessment:rows,
-                student:result,
-                edit: true,
-                message: ''
-              })
+    assesmentModel.findByPk(assessmentId, {
+            include: [{
+                model: studentModel,
+                attributes: ['id', 'name', 'classs', 'nik', 'gender', 'Address', 'Image'],
+            }]
         })
-    })
-    
-    
-    
+        .then(rows => {
+            return rows;
+        })
+        .then(rows => {
+            studentModel.findAll()
+                .then((result) => {
+                    res.render('assesment/assesment-add', {
+                        pageTitle: 'Add Assessment',
+                        path: '/assessment',
+                        assessment: rows,
+                        student: result,
+                        edit: true,
+                        message: ''
+                    })
+                })
+        })
     .catch((err)=>{
         console.log(err);
     })
@@ -130,18 +137,34 @@ exports.getEditAssesment = (req, res, next) => {
     const student_id = req.body.student_id;
     const score = req.body.score;
 
-    const assesment = new assesmentModel(assment_id,student_id,score);
+    console.log(student_id);
+    assesmentModel.findByPk(assment_id)
+    .then(ass=>{
+        ass.score    =  score;
+        ass.studentId = student_id;
 
-    assesment.save().then((result)=>{
-
-
+        return ass.save();
+    }).then((result)=>{
+        console.log("Berhasil Di Update")
         res.redirect('/assessment');
-
-
     }).catch((err)=>{
         console.log(err);
-        //res.redirect('/assessment');
+        res.redirect('/assessment');
     });
+
+
+    // const assesment = new assesmentModel(assment_id,student_id,score);
+
+    // assesment.save().then((result)=>{
+
+
+    //     res.redirect('/assessment');
+
+
+    // }).catch((err)=>{
+    //     console.log(err);
+    //     //res.redirect('/assessment');
+    // });
   
 
   }
@@ -154,10 +177,18 @@ exports.getEditAssesment = (req, res, next) => {
     const assessmentId = req.body.assessmentId;
     console.log(assessmentId);
 
-    assesmentModel.deleteById(assessmentId)
-    .then((result)=>{
-        res.redirect('/assessment');
-    }).catch((err)=>{
+    assesmentModel.findByPk(assessmentId)
+    .then((assement)=>{
+
+        return assement.destroy();
+       // res.redirect('/assessment');
+    }).then((result)=>{
+        console.log("suksses hapus delete");
+        res.redirect('/assessment'); 
+    })
+    
+    
+    .catch((err)=>{
         res.redirect('/assessment'); 
     })
       
